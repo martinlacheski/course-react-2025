@@ -1,0 +1,14 @@
+.item-row {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.item-name {
+    font-weight: bold;
+    width: 100px;
+}
+
+.item-button {
+    width: 50px;
+}
