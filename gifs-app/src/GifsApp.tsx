@@ -1,17 +1,11 @@
-import { useState } from "react";
 import { GifList } from "./gifs/components/GifList";
 import { PreviousSearch } from "./gifs/components/PreviousSearch";
-import { mockGifs } from "./mock-data/gifs.mock";
+import { useGifs } from "./gifs/hooks/useGifs";
 import { CustomHeader } from "./shared/components/CustomHeader";
 import { SearchBar } from "./shared/components/SearchBar";
 
 export const GifsApp = () => {
-  // Crear estado para las busquedas anteriores
-  const [previousSearches, setPreviousSearches] = useState<string[]>([]);
-  // Crear funcion para manejar la busqueda
-  const handleSearch = (search: string) => {
-    setPreviousSearches([search, ...previousSearches].slice(0, 8));
-  };
+  const { gifs, previousSearches, handleClick, handleSearch } = useGifs();
 
   return (
     <>
@@ -25,11 +19,13 @@ export const GifsApp = () => {
       {/* Busquedas anteriores */}
       <PreviousSearch
         previousSearches={previousSearches}
-        onSearch={handleSearch}
+        onSearch={handleClick}
       />
+      {/* Busqueda de terminos anteriores */}
+
       {/* Lista de gifs */}
       {/* Gifs List: Props => gifs: Gif[] */}
-      <GifList gifs={mockGifs} />
+      <GifList gifs={gifs} />
     </>
   );
 };
