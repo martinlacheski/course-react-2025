@@ -56,9 +56,9 @@ export const useGifs = () => {
   return {
     // Properties
     gifs,
+    previousSearches,
 
     // Methods
-    previousSearches,
     handleClick,
     handleSearch,
   };
