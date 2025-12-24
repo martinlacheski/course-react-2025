@@ -1,12 +1,12 @@
-import type { PropsWithChildren } from 'react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { renderHook, waitFor } from '@testing-library/react';
-import { describe, expect, test, vi } from 'vitest';
-import { usePaginatedHero } from './usePaginatedHero';
-import { getHeroesByPageAction } from '../actions/get-heroes-by-page.action';
-import { beforeEach } from 'node:test';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { renderHook, waitFor } from "@testing-library/react";
+import type { PropsWithChildren } from "react";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 
-vi.mock('../actions/get-heroes-by-page.action', () => ({
+import { getHeroesByPageAction } from "../actions/get-heroes-by-page.actions";
+import { usePaginatedHero } from "./usePaginatedHero";
+
+vi.mock("../actions/get-heroes-by-page.actions", () => ({
   getHeroesByPageAction: vi.fn(),
 }));
 
@@ -25,13 +25,13 @@ const tanStackCustomProvider = () => {
   );
 };
 
-describe('usePaginatedHero', () => {
+describe("usePaginatedHero", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     queryClient.clear();
   });
 
-  test('should return the initial state (isLoading)', () => {
+  test("should return the initial state (isLoading)", () => {
     const { result } = renderHook(() => usePaginatedHero(1, 6), {
       wrapper: tanStackCustomProvider(),
     });
@@ -42,7 +42,7 @@ describe('usePaginatedHero', () => {
     expect(result.current.data).toBeUndefined();
   });
 
-  test('should return success state with data when API call succeeds', async () => {
+  test("should return success state with data when API call succeeds", async () => {
     const mockHeroesData = {
       total: 20,
       pages: 4,
@@ -59,12 +59,12 @@ describe('usePaginatedHero', () => {
       expect(result.current.isSuccess).toBe(true);
     });
 
-    expect(result.current.status).toBe('success');
+    expect(result.current.status).toBe("success");
     expect(mockGetHeroesByPageAction).toHaveBeenCalled();
-    expect(mockGetHeroesByPageAction).toHaveBeenCalledWith(1, 6, 'all');
+    expect(mockGetHeroesByPageAction).toHaveBeenCalledWith(1, 6, "all");
   });
 
-  test('should call getHeroesByPageActions with arguments', async () => {
+  test("should call getHeroesByPageActions with arguments", async () => {
     const mockHeroesData = {
       total: 20,
       pages: 4,
@@ -73,7 +73,7 @@ describe('usePaginatedHero', () => {
 
     mockGetHeroesByPageAction.mockResolvedValue(mockHeroesData);
 
-    const { result } = renderHook(() => usePaginatedHero(2, 16, 'heroesABC'), {
+    const { result } = renderHook(() => usePaginatedHero(2, 16, "heroesABC"), {
       wrapper: tanStackCustomProvider(),
     });
 
@@ -81,8 +81,8 @@ describe('usePaginatedHero', () => {
       expect(result.current.isSuccess).toBe(true);
     });
 
-    expect(result.current.status).toBe('success');
+    expect(result.current.status).toBe("success");
     expect(mockGetHeroesByPageAction).toHaveBeenCalled();
-    expect(mockGetHeroesByPageAction).toHaveBeenCalledWith(2, 16, 'heroesABC');
+    expect(mockGetHeroesByPageAction).toHaveBeenCalledWith(2, 16, "heroesABC");
   });
 });

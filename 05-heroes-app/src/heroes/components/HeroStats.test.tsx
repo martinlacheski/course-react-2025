@@ -135,7 +135,7 @@ describe("HeroStats", () => {
     expect(container).toMatchSnapshot();
     expect(screen.getByText("Total de personajes")).toBeDefined();
     expect(screen.getByText("Favoritos")).toBeDefined();
-    expect(screen.getByText("Fuerte")).toBeDefined();
+    expect(screen.getByText("El más fuerte")).toBeDefined();
   });
 
   test("should change the percentage of favorites when a hero is added to favorites", () => {
