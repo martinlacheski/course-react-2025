@@ -1,10 +1,21 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { RouterProvider } from "react-router";
+import { FavoriteHeroProvider } from "./heroes/context/FavoriteHeroProvider";
 import { appRouter } from "./router/app.route";
+
+// Create a client
+const queryClient = new QueryClient();
 
 export const HeroesApp = () => {
   return (
     <>
-      <RouterProvider router={appRouter} />
+      <QueryClientProvider client={queryClient}>
+        <FavoriteHeroProvider>
+          <RouterProvider router={appRouter} />
+          <ReactQueryDevtools initialIsOpen={false} />
+        </FavoriteHeroProvider>
+      </QueryClientProvider>
     </>
   );
 };

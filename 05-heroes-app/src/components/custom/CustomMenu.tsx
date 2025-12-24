@@ -1,10 +1,10 @@
+import { cn } from "@/lib/utils";
 import {
   NavigationMenuItem,
   NavigationMenuLink,
 } from "@radix-ui/react-navigation-menu";
 import { Link, useLocation } from "react-router";
 import { NavigationMenu, NavigationMenuList } from "../ui/navigation-menu";
-import { cn } from "@/lib/utils";
 
 export const CustomMenu = () => {
   const { pathname } = useLocation();
@@ -14,7 +14,7 @@ export const CustomMenu = () => {
   };
 
   return (
-    <NavigationMenu>
+    <NavigationMenu className="py-5">
       <NavigationMenuList>
         {/* Home */}
         <NavigationMenuItem>

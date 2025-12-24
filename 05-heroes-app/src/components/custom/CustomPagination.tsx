@@ -1,39 +1,23 @@
-import { ChevronLeft, MoreHorizontal, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useSearchParams } from "react-router";
 import { Button } from "../ui/button";
 
 interface Props {
   totalPages: number;
-  page: number;
-  onChangePage?: (page: number) => void;
 }
 
-export const CustomPagination = ({ totalPages, page, onChangePage }: Props) => {
-  const getPages = () => {
-    // Si hay 7 o menos páginas, mostrar todas
-    if (totalPages <= 7) {
-      return Array.from({ length: totalPages }).map((_, i) => i + 1);
-    }
+export const CustomPagination = ({ totalPages }: Props) => {
+  const [searchParams, setSearchParams] = useSearchParams();
 
-    // Lógica para el principio
-    if (page <= 4) {
-      return [1, 2, 3, 4, 5, "...", totalPages];
-    }
+  const queryPage = searchParams.get("page") ?? "1";
+  const page = isNaN(+queryPage) ? 1 : +queryPage;
 
-    // Lógica para el final
-    if (page >= totalPages - 3) {
-      return [
-        1,
-        "...",
-        totalPages - 4,
-        totalPages - 3,
-        totalPages - 2,
-        totalPages - 1,
-        totalPages,
-      ];
-    }
+  const handlePageChange = (page: number) => {
+    if (page < 1 || page > totalPages) return;
 
-    // Lógica para el medio
-    return [1, "...", page - 1, page, page + 1, "...", totalPages];
+    searchParams.set("page", page.toString());
+
+    setSearchParams(searchParams);
   };
 
   return (
@@ -42,36 +26,38 @@ export const CustomPagination = ({ totalPages, page, onChangePage }: Props) => {
         variant="outline"
         size="sm"
         disabled={page === 1}
-        onClick={() => onChangePage?.(page - 1)}
+        onClick={() => handlePageChange(page - 1)}
       >
         <ChevronLeft className="h-4 w-4" />
-        Anterior
+        Anteriores
       </Button>
 
-      {getPages().map((item, index) =>
-        typeof item === "number" ? (
-          <Button
-            key={index}
-            variant={page === item ? "default" : "outline"}
-            size="sm"
-            onClick={() => onChangePage?.(item)}
-          >
-            {item}
-          </Button>
-        ) : (
-          <Button key={index} variant="ghost" size="sm" disabled>
-            <MoreHorizontal className="h-4 w-4" />
-          </Button>
-        )
-      )}
+      {Array.from({ length: totalPages }).map((_, index) => (
+        <Button
+          key={index}
+          variant={page === index + 1 ? "default" : "outline"}
+          size="sm"
+          onClick={() => handlePageChange(index + 1)}
+        >
+          {index + 1}
+        </Button>
+      ))}
+
+      {/* <Button variant="outline" size="sm">
+        2
+      </Button> */}
+      {/* 
+      <Button variant="ghost" size="sm" disabled>
+        <MoreHorizontal className="h-4 w-4" />
+      </Button> */}
 
       <Button
         variant="outline"
         size="sm"
         disabled={page === totalPages}
-        onClick={() => onChangePage?.(page + 1)}
+        onClick={() => handlePageChange(page + 1)}
       >
-        Siguiente
+        Siguientes
         <ChevronRight className="h-4 w-4" />
       </Button>
     </div>
