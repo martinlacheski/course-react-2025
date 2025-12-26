@@ -203,7 +203,7 @@ export const SearchControls = () => {
                   Fuerza mínima: {selectedStrength}/10
                 </label>
                 <Slider
-                  defaultValue={[selectedStrength]}
+                  value={[selectedStrength]}
                   onValueChange={(value) =>
                     setQueryParams("strength", value[0].toString())
                   }
