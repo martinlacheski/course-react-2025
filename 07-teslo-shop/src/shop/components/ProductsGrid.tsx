@@ -1,16 +1,10 @@
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import type { Product } from "@/mocks/products.mock";
 import { Filter, Grid, List } from "lucide-react";
-import { useState } from "react";
-import { useSearchParams } from "react-router";
-import { FilterSidebar } from "./FilterSidebar";
 import { ProductCard } from "./ProductCard";
+import { FilterSidebar } from "./FilterSidebar";
+import { useSearchParams } from "react-router";
+import { useState } from "react";
+import type { Product } from "@/interfaces/product.interface";
 
 interface Props {
   products: Product[];
@@ -39,18 +33,15 @@ export const ProductsGrid = ({ products }: Props) => {
           </div>
 
           <div className="flex items-center space-x-2">
-            <Sheet open={showFilters} onOpenChange={setShowFilters}>
-              <SheetTrigger asChild>
-                <Button variant="outline" size="sm" className="lg:hidden">
-                  <Filter className="h-4 w-4 mr-2" />
-                  Filtros
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="left">
-                <SheetTitle>Filtros</SheetTitle>
-                <FilterSidebar />
-              </SheetContent>
-            </Sheet>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowFilters(!showFilters)}
+              className="lg:hidden"
+            >
+              <Filter className="h-4 w-4 mr-2" />
+              Filtros
+            </Button>
 
             <div className="hidden md:flex border rounded-md">
               <Button
@@ -80,6 +71,21 @@ export const ProductsGrid = ({ products }: Props) => {
           </div>
 
           {/* Mobile Filters */}
+          {showFilters && (
+            <div className="fixed inset-0 z-50 bg-background p-4 lg:hidden">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg font-semibold">Filtros</h3>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowFilters(false)}
+                >
+                  Cerrar
+                </Button>
+              </div>
+              <FilterSidebar />
+            </div>
+          )}
 
           {/* Products Grid */}
           <div className="flex-1">
@@ -94,10 +100,11 @@ export const ProductsGrid = ({ products }: Props) => {
                 <ProductCard
                   key={product.id}
                   id={product.id}
-                  name={product.name}
+                  name={product.title}
                   price={product.price}
-                  image={product.image}
-                  category={product.category}
+                  image={product.images[0]}
+                  category={product.gender}
+                  sizes={product.sizes}
                 />
               ))}
             </div>

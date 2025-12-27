@@ -1,5 +1,6 @@
 import { lazy } from "react";
-import { createBrowserRouter, Navigate } from "react-router";
+//import { createBrowserRouter, Navigate } from "react-router";
+import { createHashRouter, Navigate } from "react-router";
 import { DashboardPage } from "../admin/pages/dashboard/DashboardPage";
 import { AdminProductPage } from "../admin/pages/product/AdminProductPage";
 import { AdminProductsPage } from "../admin/pages/products/AdminProductsPage";
@@ -9,13 +10,15 @@ import { ShopLayout } from "../shop/layouts/ShopLayout";
 import { GenderPage } from "../shop/pages/gender/GenderPage";
 import { HomePage } from "../shop/pages/home/HomePage";
 import { ProductPage } from "../shop/pages/product/ProductPage";
+import { AdminRoute } from "./routes/ProtectedRoutes";
 
 const AuthLayout = lazy(() => import("../auth/layouts/AuthLayout"));
 const AdminLayout = lazy(() => import("../admin/layouts/AdminLayout"));
 
-export const appRouter = createBrowserRouter([
+//export const appRouter = createBrowserRouter([
+export const appRouter = createHashRouter([
   {
-    // shop routes
+    // Main Routes
     path: "/",
     element: <ShopLayout />,
     children: [
@@ -33,7 +36,8 @@ export const appRouter = createBrowserRouter([
       },
     ],
   },
-  // auth routes
+
+  // Auth Routes
   {
     path: "auth",
     element: <AuthLayout />,
@@ -52,10 +56,15 @@ export const appRouter = createBrowserRouter([
       },
     ],
   },
-  // admin routes
+
+  // Admin Routes
   {
-    path: "admin",
-    element: <AdminLayout />,
+    path: "/admin",
+    element: (
+      <AdminRoute>
+        <AdminLayout />
+      </AdminRoute>
+    ),
     children: [
       {
         index: true,
@@ -71,7 +80,7 @@ export const appRouter = createBrowserRouter([
       },
     ],
   },
-  // not found route
+  // Si no se encuentra la ruta, redirige a la ruta principal
   {
     path: "*",
     element: <Navigate to="/" />,

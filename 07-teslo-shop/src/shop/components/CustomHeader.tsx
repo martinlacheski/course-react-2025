@@ -1,33 +1,32 @@
-import { CustomLogo } from "@/components/custom/CustomLogo";
+import { useRef, type KeyboardEvent } from "react";
+import { Search, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Sheet,
-  SheetContent,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { cn } from "@/lib/utils";
-import { Search } from "lucide-react";
-import { type KeyboardEvent } from "react";
 import { Link, useParams, useSearchParams } from "react-router";
+import { cn } from "@/lib/utils";
+import { CustomLogo } from "@/components/custom/CustomLogo";
+
+import { useAuthStore } from "@/auth/store/auth.store";
 
 export const CustomHeader = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const { authStatus, isAdmin, logout } = useAuthStore();
+
   const { gender } = useParams();
 
+  const inputRef = useRef<HTMLInputElement>(null);
   const query = searchParams.get("query") || "";
 
   const handleSearch = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key !== "Enter") return;
-    const query = event.currentTarget.value;
+    const query = inputRef.current?.value;
 
     const newSearchParams = new URLSearchParams();
 
     if (!query) {
       newSearchParams.delete("query");
     } else {
-      newSearchParams.set("query", query);
+      newSearchParams.set("query", inputRef.current!.value);
     }
 
     setSearchParams(newSearchParams);
@@ -86,6 +85,7 @@ export const CustomHeader = () => {
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
+                  ref={inputRef}
                   placeholder="Buscar productos..."
                   className="pl-9 w-64 h-9 bg-white"
                   onKeyDown={handleSearch}
@@ -94,41 +94,40 @@ export const CustomHeader = () => {
               </div>
             </div>
 
-            <div className="md:hidden">
-              <Sheet>
-                <SheetTrigger asChild>
-                  <Button variant="ghost" size="icon">
-                    <Search className="h-5 w-5" />
-                  </Button>
-                </SheetTrigger>
-                <SheetContent side="top">
-                  <SheetTitle className="hidden">Buscar productos</SheetTitle>
-                  <div className="flex items-center space-x-2 py-4">
-                    <div className="relative w-full">
-                      <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                      <Input
-                        placeholder="Buscar productos..."
-                        className="pl-9 w-full h-9 bg-white"
-                        onKeyDown={handleSearch}
-                        defaultValue={query}
-                      />
-                    </div>
-                  </div>
-                </SheetContent>
-              </Sheet>
-            </div>
+            <Button variant="ghost" size="icon" className="md:hidden">
+              <Search className="h-5 w-5" />
+            </Button>
 
-            <Link to="/auth/login">
-              <Button variant="default" size="sm" className="ml-2">
-                Login
+            {authStatus === "not-authenticated" ? (
+              <Link to="/auth/login">
+                <Button variant="default" size="sm" className="ml-2">
+                  Login
+                </Button>
+              </Link>
+            ) : (
+              <Button
+                onClick={logout}
+                variant="outline"
+                size="sm"
+                className="ml-2"
+              >
+                Cerrar sesión
               </Button>
-            </Link>
+            )}
 
-            <Link to="/admin">
-              <Button variant="destructive" size="sm" className="ml-2">
-                Admin
-              </Button>
-            </Link>
+            {isAdmin() && (
+              <Link to="/admin">
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  className="ml-2"
+                  type="button"
+                >
+                  <Settings />
+                  Panel
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       </div>

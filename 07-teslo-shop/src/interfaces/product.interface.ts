@@ -1,4 +1,4 @@
-import type { User } from './user.interface';
+import type { User } from "./user.interface";
 
 export interface Product {
   id: string;
@@ -14,6 +14,7 @@ export interface Product {
   user: User;
 }
 
-export type Size = 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL ';
+export type Size = "XS" | "S" | "M" | "L" | "XL" | "XXL";
+export const validSizes: Size[] = ["XS", "S", "M", "L", "XL", "XXL"];
 
-export type Gender = 'kid' | 'men' | 'women' | 'unisex';
+export type Gender = "kid" | "men" | "women" | "unisex";
